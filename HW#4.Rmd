@@ -112,6 +112,7 @@ plot(lm_c) # some of these don't look that good
 # Linear model for C
 lm_c<- lm(MC_C ~ Abatement, data = data)
 
+
 # store the parameters
 int_c <- lm_c$coefficients[1]
 slope_c <- lm_c$coefficients[2]
