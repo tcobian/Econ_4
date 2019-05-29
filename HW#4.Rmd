@@ -8,19 +8,23 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 Read in the data and packages
 ```{r, include=FALSE}
 library(tidyverse)
 data<- read_csv("HW4Data (3).csv")
 
 ```
+
 1. Write down a plausible functional form for the marginal cost of abatement for sector A. Use regression analysis to estimate the parameters of that function. Repeating this for sectors B, C, and D will give you a model of the marginal cost of abatement function for each sector. How well do your models fit the data for each sector? You may need to experiment with different functional forms. Produce a plot of the estimated marginal abatement cost functions in all four sectors (this plot should go in your memo).
 ```{r}
 # try to graph the abatement cost for the different sectors to see the form
+  # added points to see the shape
 
 # Shape of MC_a
 #############################################
 mc_graph<- ggplot(data, aes(x = Abatement, y = MC_A))+
+  geom_point() +
   geom_smooth()
 mc_graph
 ############################################
@@ -28,14 +32,16 @@ mc_graph
 # Shape of MC_B
 ###########################################
 mc_graph<- ggplot(data, aes(x = Abatement, y = MC_B))+
+  geom_point() +
   geom_smooth()
 mc_graph
-# this one only looks linear of you use geom_smooth with othe ones it is pretty noisy so I am not sure if this is linear
+# this one only looks linear of you use geom_smooth with other ones it is pretty noisy so I am not sure if this is linear
 ###########################################
 
-# Shap of MC_C
+# Shape of MC_C
 ###########################################
 mc_graph<- ggplot(data, aes(x = Abatement, y = MC_C))+
+  geom_point() +
   geom_smooth()
 mc_graph
 
@@ -45,29 +51,70 @@ mc_graph
 # Shape of MC_D
 ###########################################
 mc_graph<- ggplot(data, aes(x = Abatement, y = MC_D))+
-  geom_point()
+  geom_point() +
+  geom_smooth()
 mc_graph
 
 # This one looks very noisy I cann't make out what the shape is
-###############################################
-
-
-
-
-
-
-# first random try at a regression for sector A
-
-lm_a<- lm( Abatement ~ MC_A, data = data)
-summary(lm_a)
-plot(lm_a)
-
-
-
 
 
 ```
 
+```{r}
+
+# Regression analysis for each sector
+
+###############################################
+
+# Sector A looks linear so linear regression
+lm_a<- lm(MC_A ~ Abatement, data = data)
+summary(lm_a)
+plot(lm_a) # check fit
+
+# store parameters
+int_a <- lm_a$coefficients[1]
+slope_a <- lm_a$coefficients[2]
+
+###############################################
+
+# try linear regression for Sector b
+lm_b <- lm(MC_B ~ Abatement, data = data)
+summary(lm_b)
+plot(lm_b)
+
+# try polynomial regression for sector b
+
+lm_b2 <- lm(MC_B ~ Abatement + I(Abatement^2) + I(Abatement^3), data = data)
+summary(lm_b2) # explains 59% of the variance vs linear model's 52% of the variance
+plot(lm_b2) # residuals vs leverage don't look great but the normall QQ looks better than linear model
+
+# store parameters
+int_b <- lm_b2$coefficients[1]
+slope1_b <- lm_b2$coefficients[2]
+slope2_b <- lm_b2$coefficients[3]
+slope3_b <- lm_b2$coefficients[4]
+
+ # Graph it to check the fit 
+b_lm_graph <- ggplot(data, aes(x=Abatement, y=MC_B)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y~x+I(x^2)+ I(x^3))
+b_lm_graph
+
+#############################################
+
+# Sector C looks exponential, so exponential regression
+
+lm_c <- lm(log(MC_C) ~ Abatement, data = data)
+summary(lm_c) # explains 83% of the variance
+plot(lm_c) # some of these don't look that good
+
+# store the parameters
+int_c <- lm_c$coefficients[1]
+slope_c <- lm_c$coefficients[2]
+
+################################################
+
+```
 
 
 
