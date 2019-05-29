@@ -108,14 +108,45 @@ lm_c <- lm(log(MC_C) ~ Abatement, data = data)
 summary(lm_c) # explains 83% of the variance
 plot(lm_c) # some of these don't look that good
 
+
+# Linear model for C
+lm_c<- lm(MC_C ~ Abatement, data = data)
+
 # store the parameters
 int_c <- lm_c$coefficients[1]
 slope_c <- lm_c$coefficients[2]
 
+# linear model for MC_D
+lm_d<- lm(MC_D ~ Abatement, data = data)
+
 ################################################
+```
+2. Using these models and the current level of carbon emissions, derive each sector’s demand curve for carbon emissions. In other words, how much would each sector be willing to pay for the right to pollute the first unit, second unit, etc? Draw these demand curves on a graph. Which sector is willing to pay the most for the first unit of carbon emissions?
+```{r}
+lm_a
+# Equation = -8.6445 + 0.5768
+A<- function(x){int_a + slope_a*(180-x)}
+A(1)
+# WTP for the first unit 94.61022 
+
+B<- function(x){int_b + slope1_b*(200 -x) + slope2_b*(200 - x)^2 + slope3_b*(200 -x)^3}
+B(1)
+# WTP for the first unit 6.092104 
+
+
+C<- function(x){int_c + slope_c*(220 -x)}
+C(1)
+# WTP for the first unit 6.666876
+
+C_lm_graph <- ggplot(data, aes(x=Abatement, y=MC_C)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y~log(x))
+C_lm_graph
+
+
+
 
 ```
-
 
 
 
