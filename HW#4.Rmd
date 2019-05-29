@@ -1,0 +1,86 @@
+---
+title: "TC_AC"
+author: "Tyler Cobian"
+date: "5/29/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Read in the data and packages
+```{r, include=FALSE}
+library(tidyverse)
+data<- read_csv("HW4Data (3).csv")
+
+```
+1. Write down a plausible functional form for the marginal cost of abatement for sector A. Use regression analysis to estimate the parameters of that function. Repeating this for sectors B, C, and D will give you a model of the marginal cost of abatement function for each sector. How well do your models fit the data for each sector? You may need to experiment with different functional forms. Produce a plot of the estimated marginal abatement cost functions in all four sectors (this plot should go in your memo).
+```{r}
+# try to graph the abatement cost for the different sectors to see the form
+
+# Shape of MC_a
+#############################################
+mc_graph<- ggplot(data, aes(x = Abatement, y = MC_A))+
+  geom_smooth()
+mc_graph
+############################################
+
+# Shape of MC_B
+###########################################
+mc_graph<- ggplot(data, aes(x = Abatement, y = MC_B))+
+  geom_smooth()
+mc_graph
+# this one only looks linear of you use geom_smooth with othe ones it is pretty noisy so I am not sure if this is linear
+###########################################
+
+# Shap of MC_C
+###########################################
+mc_graph<- ggplot(data, aes(x = Abatement, y = MC_C))+
+  geom_smooth()
+mc_graph
+
+# This one might be an exponenvtial funtion
+###########################################
+
+# Shape of MC_D
+###########################################
+mc_graph<- ggplot(data, aes(x = Abatement, y = MC_D))+
+  geom_point()
+mc_graph
+
+# This one looks very noisy I cann't make out what the shape is
+###############################################
+
+
+
+
+
+
+# first random try at a regression for sector A
+
+lm_a<- lm( Abatement ~ MC_A, data = data)
+summary(lm_a)
+plot(lm_a)
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
