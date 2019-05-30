@@ -82,6 +82,11 @@ lm_b <- lm(MC_B ~ Abatement, data = data)
 summary(lm_b)
 plot(lm_b)
 
+# store parameters
+int_line_b<- lm_b$coefficients[1]
+slope_line_b<- lm_b$coefficients[2]
+
+
 # try polynomial regression for sector b
 
 lm_b2 <- lm(MC_B ~ Abatement + I(Abatement^2) + I(Abatement^3), data = data)
@@ -113,6 +118,7 @@ plot(lm_c) # some of these don't look that good
 lm_c<- lm(MC_C ~ Abatement, data = data)
 summary(lm_c)
 
+#store parameters
 int_line_c<- lm_c$coefficients[1]
 slope_line_c<- lm_c$coefficients[2]
 
@@ -125,6 +131,7 @@ slope_c <- lm_c$coefficients[2]
 lm_d<- lm(MC_D ~ Abatement, data = data)
 summary(lm_d)
 
+#Store parameters
 int_line_d<- lm_d$coefficients[1]
 slope_line_d<- lm_d$coefficients[2]
 
@@ -132,8 +139,7 @@ slope_line_d<- lm_d$coefficients[2]
 ```
 2. Using these models and the current level of carbon emissions, derive each sector’s demand curve for carbon emissions. In other words, how much would each sector be willing to pay for the right to pollute the first unit, second unit, etc? Draw these demand curves on a graph. Which sector is willing to pay the most for the first unit of carbon emissions?
 ```{r}
-lm_a
-# Equation = -8.6445 + 0.5768
+
 A<- function(x){int_a + slope_a*(180-x)}
 A(1)
 # WTP for the first unit 94.61022 
@@ -142,17 +148,22 @@ B<- function(x){int_b + slope1_b*(200 -x) + slope2_b*(200 - x)^2 + slope3_b*(200
 B(1)
 # WTP for the first unit 6.092104 
 
+B_line<- function(x){int_line_b + slope_line_b*(200-x)}
+B_line(1)
+# WTP for the first unit is  48.86781
 
 C<- function(x){int_c + slope_c*(220 -x)}
 C(1)
 # WTP for the first unit 6.666876
 
+D_line<- function(x){int_line_d + slope_line_d*(300 - x)}
+D_line(1)
+# WTP for the first uit 87.40584
+
 C_lm_graph <- ggplot(data, aes(x=Abatement, y=MC_C)) +
   geom_point() + 
   geom_smooth(method = "lm", formula = y~log(x))
 C_lm_graph
-
-
 
 
 ```
