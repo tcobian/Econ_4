@@ -222,6 +222,27 @@ D_line(1)
 
 ```
 
+Draw demand curves on a graph:
+```{r}
+
+demand <- ggplot(data, aes(x=Abatement, y=MC_A)) +
+  stat_function(fun = A, col = "red") +
+  stat_function(fun = B, col = "blue") +
+  stat_function(fun = C_line, col = "green") +
+  stat_function(fun = D_line, col = "orange") +
+  scale_x_continuous(expand = c(0,0)) +
+  labs(
+    y = "Price ($)",
+    x = "Unit Carbon Emissions"
+  ) +
+  theme_classic()
+  
+demand
+
+```
+
+
+
 3. Now focus on country X (which contains sectors A, B, and C). Assume there are no “co-benefits” from carbon abatement (i.e. that there are no local pollutants that are affected by carbon abatement). Suppose to meet the Paris Accord commitments, country X needs to cut all carbon emissions in half. For each of the policy options listed below, derive: 
   (1) the total cost of meeting the target in country X, 
   (2) the cost (or benefit) to each sector, and 
