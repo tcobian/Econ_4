@@ -112,20 +112,23 @@ b_lm_graph
 lm_c <- lm(log(MC_C) ~ Abatement, data = data)
 summary(lm_c) # explains 83% of the variance
 plot(lm_c) # some of these don't look that good
-
-
-# Linear model for C
-lm_c<- lm(MC_C ~ Abatement, data = data)
-summary(lm_c)
-
-#store parameters
-int_line_c<- lm_c$coefficients[1]
-slope_line_c<- lm_c$coefficients[2]
-
+# graph it:
+c_lm_graph <- ggplot(data, aes(x=Abatement, y=MC_C)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = log(y)~x)
+c_lm_graph
 
 # store the parameters
 int_c <- lm_c$coefficients[1]
 slope_c <- lm_c$coefficients[2]
+
+# Linear model for C
+lm_c<- lm(MC_C ~ Abatement, data = data)
+summary(lm_c) # explains 87% of the variance 
+
+#store parameters for linear model
+int_line_c<- lm_c$coefficients[1]
+slope_line_c<- lm_c$coefficients[2]
 
 # linear model for MC_D
 lm_d<- lm(MC_D ~ Abatement, data = data)
@@ -137,6 +140,60 @@ slope_line_d<- lm_d$coefficients[2]
 
 ################################################
 ```
+graphs of all the sectors
+
+```{r}
+
+# sector A - linear regression
+A_lm_graph <- ggplot(data, aes(x=Abatement, y=MC_A)) +
+  geom_point() + 
+  geom_abline(aes(intercept = int_a, slope = slope_a, col = "red"), show.legend = FALSE) +
+  labs(
+    y = "Marginal Cost Sector A"
+  ) +
+  theme_classic()
+A_lm_graph
+
+# sector B - polynomial regression
+b_graph <- ggplot(data, aes(x=Abatement, y=MC_B)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y~x+I(x^2)+ I(x^3)) # this isn't right
+b_graph
+
+# Sector C
+# sos exponential is being complicated
+fake_mc <- seq(1, 150, 1)
+sectorc <- exp(predict(lm_c, Abatement=fake_mc))
+c_graph <- ggplot(data, aes(x=Abatement, y=MC_C)) +
+  geom_point() + 
+  geom_line(aes(fake_mc, sectorc))
+c_graph
+
+# here is the line graph for sector C
+c_line_graph <- ggplot(data, aes(x=Abatement, y=MC_C)) +
+  geom_point() + 
+  geom_abline(aes(intercept = int_line_c, slope = slope_line_c), col = "red") +
+  labs(
+    y = "Marginal Cost Sector C"
+  ) +
+  theme_classic()
+c_line_graph
+
+# sector D
+
+d_graph <- ggplot(data, aes(x=Abatement, y=MC_D)) +
+  geom_point() + 
+  geom_abline(aes(intercept = int_line_d, slope = slope_line_d, col = "red"), show.legend = FALSE) +
+  labs(
+    y = "Marginal Cost Sector D"
+  ) +
+  theme_classic()
+d_graph
+
+```
+
+
+
 2. Using these models and the current level of carbon emissions, derive each sector’s demand curve for carbon emissions. In other words, how much would each sector be willing to pay for the right to pollute the first unit, second unit, etc? Draw these demand curves on a graph. Which sector is willing to pay the most for the first unit of carbon emissions?
 ```{r}
 
@@ -144,30 +201,53 @@ A<- function(x){int_a + slope_a*(180-x)}
 A(1)
 # WTP for the first unit 94.61022 
 
-B<- function(x){int_b + slope1_b*(200 -x) + slope2_b*(200 - x)^2 + slope3_b*(200 -x)^3}
+B<- function(x){int_b + slope1_b*(200 -x) + slope2_b*(200 - x)^2 + slope3_b*(200 -x)^3} #let's use this one
 B(1)
 # WTP for the first unit 6.092104 
 
 B_line<- function(x){int_line_b + slope_line_b*(200-x)}
 B_line(1)
-# WTP for the first unit is  48.86781
+# WTP for the first unit with a linear model is  48.86781
 
-C<- function(x){int_c + slope_c*(220 -x)}
-C(1)
+C <- function(x){int_c + slope_c*(220 - x)}
+
+C_line<- function(x){int_c + slope_c*(220 - x)}
+C_line(1)
 # WTP for the first unit 6.666876
 
 D_line<- function(x){int_line_d + slope_line_d*(300 - x)}
 D_line(1)
 # WTP for the first uit 87.40584
 
-C_lm_graph <- ggplot(data, aes(x=Abatement, y=MC_C)) +
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y~log(x))
-C_lm_graph
+
+```
+
+3. Now focus on country X (which contains sectors A, B, and C). Assume there are no “co-benefits” from carbon abatement (i.e. that there are no local pollutants that are affected by carbon abatement). Suppose to meet the Paris Accord commitments, country X needs to cut all carbon emissions in half. For each of the policy options listed below, derive: 
+  (1) the total cost of meeting the target in country X, 
+  (2) the cost (or benefit) to each sector, and 
+  (3) the tax revenue generated.
+  
+a. Cap on carbon. Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus reducing total emissions from 600 down to 300).
+```{r}
 
 
 ```
 
+
+b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the tax that accomplishes the desired reduction.
+
+```{r}
+
+
+```
+
+c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to their current emissions minus 100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three sectors are allowed to trade with each other. You will need to derive the outcome of that trading.
+
+```{r}
+
+
+
+```
 
 
 
