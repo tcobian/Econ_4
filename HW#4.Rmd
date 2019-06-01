@@ -270,18 +270,31 @@ total_cost_100<- cost_A_100 + cost_B_100 + cost_C_100
 total_cost_100
 #694.205
 
-
-
-
-
-
-
+# No tax revenue generated as it is a cap and not a tax??
 ```
 
 
 b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the tax that accomplishes the desired reduction.
 
 ```{r}
+# dicide the total cost found above and divide by 300 to get the tax per ton of carbon emitted ??
+
+tax<- total_cost_100/300
+tax
+#  2.314017 per ton of carbon emitted
+
+# cost to each sector
+cost_per_sector_tax<- tax*100
+cost_per_sector_tax
+# 231.4017
+
+# tax revenue from the tax
+
+tax_rev<- tax*300
+tax_rev
+# 694.205
+
+
 
 
 ```
