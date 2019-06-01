@@ -251,6 +251,30 @@ demand
 a. Cap on carbon. Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus reducing total emissions from 600 down to 300).
 ```{r}
 
+# to do this I am juat going to um the MC for seach sector uo until 100 ton isreached this seems too simple let me know what you think
+
+# cost of reducing by 100 ton in sector A
+cost_A_100<- sum(data$MC_A[0:11])
+# 220.5025
+
+# cost of reducing by 100 ton in sector B
+cost_B_100<-sum(data$MC_B[0:11])
+# 209.572
+
+# cost of reducing by 100 ton in sector C
+cost_C_100<-sum(data$MC_C[0:11])
+# 264.1305
+
+# total cost of reducing emissions by 300 ton
+total_cost_100<- cost_A_100 + cost_B_100 + cost_C_100
+total_cost_100
+#694.205
+
+
+
+
+
+
 
 ```
 
