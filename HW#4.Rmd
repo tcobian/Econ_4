@@ -304,8 +304,47 @@ c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to the
 ```{r}
 # first need to aggregate the demand curves horizonatally 
 
+deno = slope_a * slope_line_b + slope_a * slope_line_c + slope_line_b * slope_line_c
+
+agg_y_int = (int_a*slope_line_b*slope_line_c/deno) + (int_line_b*slope_a*slope_line_c/deno) + (int_line_c*slope_line_c*slope_a/deno)
+
+agg_coeff = (slope_a*slope_line_b*slope_line_c/deno)
 
 
+
+
+
+
+agg_abate_reverse <- function(x){
+  agg_coeff*x + agg_y_int
+}
+
+
+ggplot(data.frame(x=c(0,200)), aes(x=x)) + 
+    stat_function(fun=A, geom ="line", aes(color = "A")) + 
+    stat_function(fun=B_line, geom ="line", aes(color = "B")) +
+    stat_function(fun=C_line, geom ="line", aes(color = "C")) +
+    stat_function(fun=agg_abate_reverse, geom ="line", aes(color = "Aggregated"))+
+    labs(x = "Abatement", y = "Price")+
+    scale_x_continuous(limits =c(0,300), expand = c(0,0))+
+    scale_y_continuous(limits=c(0,50), expand=c(0,0))+
+    theme_bw()
+
+
+demand <- ggplot(data, aes(x=Abatement, y=MC_A)) +
+  stat_function(fun = A, col = "red") +
+  stat_function(fun = B_line, col = "blue") +
+  stat_function(fun = C_line, col = "green") +
+  stat_function(fun=agg_abate_reverse, geom ="line", aes(color = "Aggregated"))+
+  scale_x_continuous(expand = c(0,0), limits = c(0,350)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,100))
+  labs(
+    y = "Price ($)",
+    x = "Unit Carbon Emissions"
+  ) +
+  theme_classic()
+  
+demand
 
 
 
