@@ -300,7 +300,6 @@ tax_rev
 ```
 
 c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to their current emissions minus 100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three sectors are allowed to trade with each other. You will need to derive the outcome of that trading.
-
 ```{r}
 # first need to aggregate the demand curves horizonatally 
 
@@ -310,14 +309,41 @@ agg_y_int = (int_a*slope_line_b*slope_line_c/deno) + (int_line_b*slope_a*slope_l
 
 agg_coeff = (slope_a*slope_line_b*slope_line_c/deno)
 
-
-
-
-
-
 agg_abate_reverse <- function(x){
   agg_coeff*x + agg_y_int
 }
+agg_abate_reverse(300)
+
+
+
+
+```
+
+MC lines:
+
+```{r}
+
+# To test how much abatement each place would need at the price of the aggregate MC curve
+
+A_MC <- function(x){(-int_a + x)/slope_a}
+A_MC() # 73.89752 
+
+B_MC<- function(x){(-int_line_b + x)/slope_line_b}
+
+B_MC(33.98271) # 124.1042 
+
+C_MC <- function(x){(-int_line_c + x)/slope_line_c}
+C_MC(33.98271) #  58.22428 
+
+
+
+
+```
+
+
+Graph:
+
+```{r}
 
 
 ggplot(data.frame(x=c(0,200)), aes(x=x)) + 
@@ -331,25 +357,23 @@ ggplot(data.frame(x=c(0,200)), aes(x=x)) +
     theme_bw()
 
 
-demand <- ggplot(data, aes(x=Abatement, y=MC_A)) +
-  stat_function(fun = A, col = "red") +
-  stat_function(fun = B_line, col = "blue") +
-  stat_function(fun = C_line, col = "green") +
+MC_ag <- ggplot(data, aes(x=Abatement, y=MC_A)) +
+  stat_function(fun = A_MC, col = "red") +
+  stat_function(fun = B_MC, col = "blue") +
+  stat_function(fun = C_MC, col = "green") +
   stat_function(fun=agg_abate_reverse, geom ="line", aes(color = "Aggregated"))+
   scale_x_continuous(expand = c(0,0), limits = c(0,350)) +
-  scale_y_continuous(expand = c(0,0), limits = c(0,100))
+  scale_y_continuous(expand = c(0,0), limits = c(0,100)) +
   labs(
     y = "Price ($)",
-    x = "Unit Carbon Emissions"
+    x = "Abatement"
   ) +
   theme_classic()
   
-demand
-
+MC_ag
 
 
 ```
-
 
 
 
