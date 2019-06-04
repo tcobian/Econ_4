@@ -379,6 +379,48 @@ MC_ag
 
 
 
+4. Again, without any co-benefits, suppose that country Y (which only has one carbon-emitting sector, D) has no obligation to reduce its emissions. Country X asks country Y to enter the country X carbon market. Doing so would require country Y to put a cap on carbon emissions at its current level of emissions (300 tons), but would then allow country Y to sell carbon offsets to sectors A, B, or C. Are there any incentives for country Y to enter country X’s carbon market and to thus place a voluntary cap on its emissions? Are there any incentives for country X to try to attract country Y into its market?
+
+```{r}
+# How much does it cost country Y (sector D) to abate to 300
+
+MC_D<- function(x){int_line_d + slope_line_d*(x)}
+MC_D(300) #87.66577 
+
+d_per_unit_carbon <- MC_D(300)/300
+d_per_unit_carbon
+# So country X would have to pay more than $  0.2922192  per unit ccarbon for country Y to be interested
+
+# oer units abatement costs for A, B, C
+C_A<- function(x){int_a + slope_a*(x)}
+A_per_unit_carbon <- C_A(300)/300
+A_per_unit_carbon # 0.548027 
+
+C_B<- function(x){int_line_b + slope_line_b*(x)}
+B_per_unit_carbon <- C_B(300)/300
+B_per_unit_carbon #   0.2298033 
+
+C_C<- function(x){int_c + slope_c*(x)}
+C_per_unit_carbon <- C_C(300)/300
+C_per_unit_carbon  #0.02843763 
+
+
+
+```
+
+
+5. Now assume that every ton of carbon emissions creates 1 ton of local air pollution. Local air pollution causes economic damages (health, environmental, etc.), but only in the country in which it is emitted. Assume there are no local air pollution regulations in either country X or country Y.
+a. In a carbon cap and trade market that only covers sectors in country X, how much local air pollution would you expect in country X? In country Y?
+
+```{r}
+# just add 1 to each MC function
+
+```
+
+
+b. If country Y enters the carbon market for country X (as in question 4 above), how much local pollution will there be in country X and country Y?
+
+c. What advice can you give country X and country Y about the desirability of allowing international trade of carbon emissions credits?
 
 
 
