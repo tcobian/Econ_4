@@ -227,7 +227,7 @@ Draw demand curves on a graph:
 
 demand <- ggplot(data, aes(x=Abatement, y=MC_A)) +
   stat_function(fun = A, col = "red") +
-  stat_function(fun = B, col = "blue") +
+  stat_function(fun = B_line, col = "blue") +
   stat_function(fun = C_line, col = "green") +
   stat_function(fun = D_line, col = "orange") +
   scale_x_continuous(expand = c(0,0)) +
