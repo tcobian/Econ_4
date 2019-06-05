@@ -314,9 +314,6 @@ agg_abate_reverse <- function(x){
 }
 agg_abate_reverse(300)
 
-
-
-
 ```
 
 MC lines:
@@ -326,18 +323,44 @@ MC lines:
 # To test how much abatement each place would need at the price of the aggregate MC curve
 
 A_MC <- function(x){(-int_a + x)/slope_a}
-A_MC() # 73.89752 
+A_MC(39.43) # 73.89752 
 
 B_MC<- function(x){(-int_line_b + x)/slope_line_b}
 
-B_MC(33.98271) # 124.1042 
+B_MC(39.43) # 124.1042 
 
 C_MC <- function(x){(-int_line_c + x)/slope_line_c}
-C_MC(33.98271) #  58.22428 
+C_MC(39.43) 
+
+# MC
+A_2<- function(x){int_a + slope_a*(x)}
+
+B_2<- function(x){int_line_b + slope_line_b*(x)}
+
+C_2<- function(x){int_line_c + slope_line_c*(x)}
+
+# given the abatement, what is the price?
+net_abate = function(x) {
+  a = A_2(x)
+  b = B_2(x)
+  c= C_2(x)
+  
+  return(a + b + c)
+}
+
+net_abate(300)
 
 
+# given the price, what is the abatement?
+net_abate = function(x) {
+  a = A_MC(x)
+  b = B_MC(x)
+  c= C_MC(x)
+  
+  return(a + b + c)
+}
 
-
+net_abate(39.4)
 ```
 
 
@@ -381,6 +404,7 @@ MC_ag
 
 4. Again, without any co-benefits, suppose that country Y (which only has one carbon-emitting sector, D) has no obligation to reduce its emissions. Country X asks country Y to enter the country X carbon market. Doing so would require country Y to put a cap on carbon emissions at its current level of emissions (300 tons), but would then allow country Y to sell carbon offsets to sectors A, B, or C. Are there any incentives for country Y to enter country X’s carbon market and to thus place a voluntary cap on its emissions? Are there any incentives for country X to try to attract country Y into its market?
 
+redo for 4 sectors and find the new amount of abatement for each sector under cap and trade
 ```{r}
 # How much does it cost country Y (sector D) to abate to 300
 
@@ -400,9 +424,9 @@ C_B<- function(x){int_line_b + slope_line_b*(x)}
 B_per_unit_carbon <- C_B(300)/300
 B_per_unit_carbon #   0.2298033 
 
-C_C<- function(x){int_c + slope_c*(x)}
+C_C<- function(x){int_line_c + slope_line_c*(x)}
 C_per_unit_carbon <- C_C(300)/300
-C_per_unit_carbon  #0.02843763 
+C_per_unit_carbon  #0.7449765 
 
 
 
@@ -422,7 +446,10 @@ b. If country Y enters the carbon market for country X (as in question 4 above),
 
 c. What advice can you give country X and country Y about the desirability of allowing international trade of carbon emissions credits?
 
-
+net benefit to firm A
+tax: total abatement cost
+what they pay in tax
+tax*quanitity
 
 
 
