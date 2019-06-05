@@ -305,7 +305,7 @@ c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to the
 
 deno = slope_a * slope_line_b + slope_a * slope_line_c + slope_line_b * slope_line_c
 
-agg_y_int = (int_a*slope_line_b*slope_line_c/deno) + (int_line_b*slope_a*slope_line_c/deno) + (int_line_c*slope_line_c*slope_a/deno)
+agg_y_int = (int_a*slope_line_b*slope_line_c/deno) + (int_line_b*slope_a*slope_line_c/deno) + (int_line_c*slope_line_b*slope_a/deno)
 
 agg_coeff = (slope_a*slope_line_b*slope_line_c/deno)
 
@@ -313,6 +313,8 @@ agg_abate_reverse <- function(x){
   agg_coeff*x + agg_y_int
 }
 agg_abate_reverse(300)
+
+
 
 ```
 
@@ -323,14 +325,22 @@ MC lines:
 # To test how much abatement each place would need at the price of the aggregate MC curve
 
 A_MC <- function(x){(-int_a + x)/slope_a}
-A_MC(39.43) # 73.89752 
+abate_a<- A_MC(39.43)
+abate_a
+
 
 B_MC<- function(x){(-int_line_b + x)/slope_line_b}
-
-B_MC(39.43) # 124.1042 
+abate_b<- B_MC(39.43)
+abate_b
 
 C_MC <- function(x){(-int_line_c + x)/slope_line_c}
-C_MC(39.43) 
+abate_c<- C_MC(39.43)
+abate_c
+
+
+
+
+
 
 # MC
 A_2<- function(x){int_a + slope_a*(x)}
