@@ -277,6 +277,7 @@ total_cost_100
 b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the tax that accomplishes the desired reduction.
 
 ```{r}
+# tax should be same as the price labeled for number 3
 # dicide the total cost found above and divide by 300 to get the tax per ton of carbon emitted ??
 
 tax<- total_cost_100/300
@@ -312,7 +313,8 @@ agg_coeff = (slope_a*slope_line_b*slope_line_c/deno)
 agg_abate_reverse <- function(x){
   agg_coeff*x + agg_y_int
 }
-agg_abate_reverse(300)
+price<- agg_abate_reverse(300)
+price
 
 
 
@@ -341,7 +343,7 @@ abate_c
 
 
 
-
+# not sure if we need the rest of the code in this chunk now that we have the cost and the appropriate abatement for all three sectors???
 # MC
 A_2<- function(x){int_a + slope_a*(x)}
 
@@ -365,7 +367,7 @@ net_abate(300)
 net_abate = function(x) {
   a = A_MC(x)
   b = B_MC(x)
-  c= C_MC(x)
+  c = C_MC(x)
   
   return(a + b + c)
 }
@@ -408,10 +410,6 @@ MC_ag
 
 ```
 
-
-
-
-
 4. Again, without any co-benefits, suppose that country Y (which only has one carbon-emitting sector, D) has no obligation to reduce its emissions. Country X asks country Y to enter the country X carbon market. Doing so would require country Y to put a cap on carbon emissions at its current level of emissions (300 tons), but would then allow country Y to sell carbon offsets to sectors A, B, or C. Are there any incentives for country Y to enter country X’s carbon market and to thus place a voluntary cap on its emissions? Are there any incentives for country X to try to attract country Y into its market?
 
 redo for 4 sectors and find the new amount of abatement for each sector under cap and trade
@@ -425,7 +423,7 @@ d_per_unit_carbon <- MC_D(300)/300
 d_per_unit_carbon
 # So country X would have to pay more than $  0.2922192  per unit ccarbon for country Y to be interested
 
-# oer units abatement costs for A, B, C
+# per units abatement costs for A, B, C
 C_A<- function(x){int_a + slope_a*(x)}
 A_per_unit_carbon <- C_A(300)/300
 A_per_unit_carbon # 0.548027 
@@ -437,6 +435,46 @@ B_per_unit_carbon #   0.2298033
 C_C<- function(x){int_line_c + slope_line_c*(x)}
 C_per_unit_carbon <- C_C(300)/300
 C_per_unit_carbon  #0.7449765 
+
+
+
+```
+
+Going with what Sam said in office hours and redo what was done in 3c but now with sector D (counrty y)
+```{r}
+# aggregate demand with all four sectors now
+
+deno_2<-  slope_a * slope_line_b + slope_a * slope_line_c + slope_line_b * slope_line_c + slope_line_d*slope_a + slope_line_d* slope_line_b + slope_line_d*slope_line_c
+
+agg_y_int_2 = (int_a*slope_line_b*slope_line_c*slope_line_d/deno_2) + (int_line_b*slope_a*slope_line_c*slope_line_d/deno_2) + (int_line_c*slope_line_b*slope_a*slope_line_d/deno_2) + (int_line_d*slope_a*slope_line_b*slope_line_c/deno_2)
+
+agg_coeff_2 = (slope_a*slope_line_b*slope_line_c*slope_line_d/deno_2)
+
+agg_abate_reverse_2 <- function(x){agg_coeff_2*x + agg_y_int_2}
+
+price_2<- agg_abate_reverse_2(300)
+price_2
+
+abate_a_2<- A_MC(price_2)
+abate_a_2
+
+abate_b_2<- B_MC(price_2)
+abate_b_2
+
+abate_c_2<- C_MC(price_2)
+abate_c_2
+
+D_MC<- function(x){(-int_line_d + x)/slope_line_d}
+
+abate_d_2<- D_MC(price_2)
+abate_d_2
+
+
+
+
+
+
+
 
 
 
