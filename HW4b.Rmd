@@ -442,9 +442,9 @@ x_pollute_2<- pollute_a_2 + pollute_b_2 + pollute_c_2
 
 y_pollute_2<- pollute_d_2
 
-
 ```
-
+- local air pollution for counrty x: `r round(x_pollute_2, 2)`
+- local air pollustion for country y: `r round(y_pollute_2, 2)`
 
 c. What advice can you give country X and country Y about the desirability of allowing international trade of carbon emissions credits?
 
@@ -452,6 +452,17 @@ net benefit to firm A
 tax: total abatement cost
 what they pay in tax
 tax*quanitity
+
+```{r, include=FALSE}
+
+
+
+
+
+
+
+```
+
 
 
 
