@@ -266,6 +266,8 @@ abate_b<- B_MC(price)
 C_MC <- function(x){(-int_line_c + x)/slope_line_c}
 abate_c<- C_MC(price)
 
+D_MC<- function(x){(-int_line_d + x)/slope_line_d}
+
 # check it adds up to 300:
 total_abate_cap <- abate_a + abate_b + abate_c # it does!!
 
@@ -322,12 +324,13 @@ agg_price_elegant<- function(x){
   b = B_MC(x)
   c = C_MC(x)
   d = D_MC(x)
+  
   return(a + b + c + d)
 }
 
-agg_abate_elegant(29.81)
+agg_abate_elegant(166)
 
-price2<- agg_abate_elegant(29.81)
+price2<- agg_abate_elegant(166)
 
 
 ```
