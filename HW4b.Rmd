@@ -453,6 +453,8 @@ tax: total abatement cost
 what they pay in tax
 tax*quanitity
 
+- If international trade is allowed then you will be able to gain more benefit from the reduction of carbon emissions but this will have a negative effect on local air pollution. This is because there are local air pollutants that will affect the local community. International trade of carbon will not adress this issue as the pollutants remain local.
+
 ```{r, include=FALSE}
 
 
