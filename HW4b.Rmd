@@ -367,7 +367,7 @@ net_abate(300)
 
 ```
 
-```{r, include = FALSE}
+```{r, include=FALSE}
 # To test how much abatement each place would need at the price of the aggregate MC curve
 abate_a_4<- A_MC(new_price)
 
@@ -402,10 +402,11 @@ total_cost_4 <- cost_A_cap$value + cost_B_cap$value + cost_C_cap$value
 - Cost to sector C: `r round(cost_C_4$value, 2)` dollars
 - tax revenue generated: 
 
-5. Now assume that every ton of carbon emissions creates 1 ton of local air pollution. Local air pollution causes economic damages (health, environmental, etc.), but only in the country in which it is emitted. Assume there are no local air pollution regulations in either country X or country Y.
+**5. Now assume that every ton of carbon emissions creates 1 ton of local air pollution. Local air pollution causes economic damages (health, environmental, etc.), but only in the country in which it is emitted. Assume there are no local air pollution regulations in either country X or country Y.**
+
 a. In a carbon cap and trade market that only covers sectors in country X, how much local air pollution would you expect in country X? In country Y?
 
-```{r}
+```{r, include=FALSE}
 # just add 1 to each MC function
 
 # take what the initial emissions of each sector was and subtract the amount they are abating and that is the level of local air pollution in each country
@@ -424,10 +425,12 @@ country_y_pollute<- 300
 
 ```
 
+- local air pollution in country x: `r round(country_x_pollute, 2)`
+- Local air pollution in country y: `r round(country_y_pollute, 2)`
 
 b. If country Y enters the carbon market for country X (as in question 4 above), how much local pollution will there be in country X and country Y?
 
-```{r}
+```{r, include=FALSE}
 # take into accoubnt now how much each sector is abating from problem 4 and subtract it from the amount they are polluting
 
 pollute_a_2<- 180 - abate_a_4
@@ -438,9 +441,6 @@ pollute_d_2<- 300 - abate_d_4
 x_pollute_2<- pollute_a_2 + pollute_b_2 + pollute_c_2 
 
 y_pollute_2<- pollute_d_2
-
-
-
 
 
 ```
