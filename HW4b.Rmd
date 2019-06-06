@@ -335,12 +335,13 @@ agg_price_elegant<- function(x){
   b = B_MC(x)
   c = C_MC(x)
   d = D_MC(x)
+  
   return(a + b + c + d)
 }
 
-agg_abate_elegant(166)
-
-price2<- agg_abate_elegant(166)
+agg_price_elegant(29.81)
+new_price<- agg_abate_elegant(29.81)
+# this comes out to the correct total abatement but not the correct indiviual abatement when applying it to the indiviual functions below
 
 ###################################
 
@@ -368,14 +369,14 @@ net_abate(300)
 
 ```{r, include = FALSE}
 # To test how much abatement each place would need at the price of the aggregate MC curve
-abate_a_4<- A_MC(price2)
+abate_a_4<- A_MC(new_price)
 
-abate_b_4<- B_MC(price2)
+abate_b_4<- B_MC(new_price)
 
-abate_c_4<- C_MC(price2)
+abate_c_4<- C_MC(new_price)
 
 D_MC <- function(x){(-int_line_d + x)/slope_line_d}
-abate_d_4 <- D_MC(price2)
+abate_d_4 <- D_MC(new_price)
 
 # check if it adds up to 300
 total <- abate_a_4 + abate_b_4 + abate_c_4 + abate_d_4 # why doesnt this work?!?!!??!
