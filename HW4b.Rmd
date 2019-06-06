@@ -1,0 +1,400 @@
+---
+title: "Final HW4"
+author: "AnnaClaire Marley"
+date: "6/5/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Read in the data and packages
+```{r, include=FALSE}
+library(tidyverse)
+data<- read_csv("HW4Data (3).csv")
+
+```
+
+**1. Write down a plausible functional form for the marginal cost of abatement for sector A. Use regression analysis to estimate the parameters of that function. Repeating this for sectors B, C, and D will give you a model of the marginal cost of abatement function for each sector. How well do your models fit the data for each sector? You may need to experiment with different functional forms. Produce a plot of the estimated marginal abatement cost functions in all four sectors (this plot should go in your memo).**
+```{r, include = FALSE}
+
+# Linear regression for each sector
+
+###############################################
+
+# Sector A looks linear so linear regression
+lm_a<- lm(MC_A ~ Abatement, data = data)
+summary(lm_a)
+# plot(lm_a) # check fit
+
+# store parameters
+int_a <- lm_a$coefficients[1]
+slope_a <- lm_a$coefficients[2]
+
+###############################################
+
+# try linear regression for Sector b
+lm_b <- lm(MC_B ~ Abatement, data = data)
+summary(lm_b)
+# plot(lm_b)
+
+# store parameters
+int_line_b<- lm_b$coefficients[1]
+slope_line_b<- lm_b$coefficients[2]
+
+#############################################
+
+# Linear model for C
+lm_c<- lm(MC_C ~ Abatement, data = data)
+summary(lm_c) # explains 87% of the variance 
+
+#store parameters for linear model
+int_line_c<- lm_c$coefficients[1]
+slope_line_c<- lm_c$coefficients[2]
+
+#############################################
+
+# linear model for MC_D
+lm_d<- lm(MC_D ~ Abatement, data = data)
+summary(lm_d)
+
+#Store parameters
+int_line_d<- lm_d$coefficients[1]
+slope_line_d<- lm_d$coefficients[2]
+
+################################################
+```
+
+*need to figure out this inline referencing*
+Regression fit
+Sector A: Data looked relatively linear and a linear model described `r lm_a$r.squared` of the variance of the data 
+
+Graphs of all the sectors
+
+```{r, echo=FALSE, message = FALSE}
+# sector A 
+A_lm_graph <- ggplot(data, aes(x=Abatement, y=MC_A)) +
+  geom_point() + 
+  geom_abline(aes(intercept = int_a, slope = slope_a), col = "red", show.legend = FALSE) +
+  labs(
+    y = "Marginal Cost Sector A"
+  ) +
+  theme_classic()
+A_lm_graph
+
+# sector B 
+B_lm_graph <- ggplot(data, aes(x=Abatement, y=MC_B)) +
+  geom_point() + 
+  geom_abline(aes(intercept = int_line_b, slope = slope_line_b), col = "red", show.legend = FALSE) +
+  labs(
+    y = "Marginal Cost Sector B"
+  ) +
+  theme_classic()
+B_lm_graph
+
+
+# sector C
+c_line_graph <- ggplot(data, aes(x=Abatement, y=MC_C)) +
+  geom_point() + 
+  geom_abline(aes(intercept = int_line_c, slope = slope_line_c), col = "red") +
+  labs(
+    y = "Marginal Cost Sector C"
+  ) +
+  theme_classic()
+c_line_graph
+
+# sector D
+
+d_graph <- ggplot(data, aes(x = Abatement, y = MC_D)) +
+  geom_point() + 
+  geom_abline(aes(intercept = int_line_d, slope = slope_line_d, col = "red"), show.legend = FALSE) +
+  labs(
+    y = "Marginal Cost Sector D"
+  ) +
+  theme_classic()
+d_graph
+
+```
+
+
+
+**2. Using these models and the current level of carbon emissions, derive each sector’s demand curve for carbon emissions. In other words, how much would each sector be willing to pay for the right to pollute the first unit, second unit, etc? Draw these demand curves on a graph. Which sector is willing to pay the most for the first unit of carbon emissions?**
+```{r, echo=FALSE, message = FALSE, warning=FALSE}
+
+A<- function(x){int_a + slope_a*(180-x)}
+WTP_A <- A(1)
+
+B_line<- function(x){int_line_b + slope_line_b*(200-x)}
+WTP_B <- B_line(1)
+
+C_line<- function(x){int_line_c + slope_line_c*(220 - x)}
+WTP_C <- C_line(1)
+
+D_line<- function(x){int_line_d + slope_line_d*(300 - x)}
+WTP_D <- D_line(1)
+
+```
+
+
+```{r, echo=FALSE, warning=FALSE}
+# Draw demand curves on a graph:
+
+demand <- ggplot(data, aes(x=Abatement, y=MC_A)) +
+  stat_function(fun = A, aes(color = "A")) +
+  stat_function(fun = B_line, aes(color = "B_line")) +
+  stat_function(fun = C_line, aes(color = "C_line")) +
+  stat_function(fun = D_line, aes(color = "D_line")) +
+  scale_x_continuous(expand = c(0,0), limits = c(0,300)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,200)) +
+  labs(
+    y = "Price ($)",
+    x = "CO2 Emissions"
+  ) +
+  theme_classic()
+  
+demand
+
+```
+
+Sector C is willing to pay the most for the first unit of carbon emissions ($`r round(WTP_C, 2)`).
+
+
+**3. Now focus on country X (which contains sectors A, B, and C). Assume there are no “co-benefits” from carbon abatement (i.e. that there are no local pollutants that are affected by carbon abatement). Suppose to meet the Paris Accord commitments, country X needs to cut all carbon emissions in half. For each of the policy options listed below, derive: **
+ **(1) the total cost of meeting the target in country X** 
+ ** (2) the cost (or benefit) to each sector **
+ ** (3) the tax revenue generated.**
+  
+**a. Cap on carbon. Each sector (A, B, and C) must cut its carbon emissions by 100 tons (thus reducing total emissions from 600 down to 300).**
+
+```{r, include=FALSE}
+# need the actual MCs to integrate
+A_2<- function(x){int_a + slope_a*(x)}
+
+B_2<- function(x){int_line_b + slope_line_b*(x)}
+
+C_2<- function(x){int_line_c + slope_line_c*(x)}
+
+```
+
+```{r, echo = FALSE}
+# the old thing you did wasn't right because you were working with the data and not the actual lines
+
+# try with integration
+
+###################
+# sector A: current carbon emissions are 180, cut down by 1/2 = 90
+cost_A <- integrate(A_2, 0, 90)
+
+# sector B: current carbon emissions are 200, cut down by 1/2 = 100
+cost_B <- integrate(B_2, 0, 100)
+
+# sector C: current carbon emissions are 220, cut down by 1/2 = 110
+cost_C <- integrate(C_2, 0, 110)
+
+# total cost
+
+total_cost <- cost_A$value + cost_B$value + cost_C$value
+
+# also need help with this inline referencing the numbers are coming out weird 
+```
+
+- The total cost of meeting the target in country X: `r round(total_cost, 2)`
+- Cost to sector A: `r round(cost_A$value, 2)`
+- Cost to sector B: `r round(cost_B$value, 2)`
+- Cost to sector C: `r round(cost_C$value, 2)`
+
+**b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the tax that accomplishes the desired reduction.**
+
+```{r, echo = FALSE}
+# tax should be where the aggregate marginal cost curve crosses the aggregate demand curve 
+# costs should
+
+
+# to find the costs:
+# need to integrate under each of these
+# need to add what the end of the integration is to, ie how much each sector has to emit with the tax
+
+#cost_A_t <- integrate(A_2, 0, )
+
+#cost_B_t <- integrate(B_2, 0, )
+
+#cost_C_cap <- integrate(C_2, 0, )
+
+#total cost
+
+#total_cost_t <- cost_A_t$value + cost_B_t$value + cost_C_tvalue
+
+
+```
+
+- The total cost of meeting the target in country X: 
+- Cost to sector A: 
+- Cost to sector B: 
+- Cost to sector C: 
+- tax revenue generated:
+
+**c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to their current emissions minus 100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three sectors are allowed to trade with each other. You will need to derive the outcome of that trading.**
+```{r, echo = FALSE}
+# first need to aggregate the demand curves horizonatally 
+
+deno = slope_a * slope_line_b + slope_a * slope_line_c + slope_line_b * slope_line_c
+
+agg_y_int = (int_a*slope_line_b*slope_line_c/deno) + (int_line_b*slope_a*slope_line_c/deno) + (int_line_c*slope_line_b*slope_a/deno)
+
+agg_coeff = (slope_a*slope_line_b*slope_line_c/deno)
+
+agg_abate_reverse <- function(x){
+  agg_coeff*x + agg_y_int
+}
+price<- agg_abate_reverse(300)
+
+```
+
+
+```{r, echo = FALSE}
+
+# To test how much abatement each place would need at the price of the aggregate MC curve
+A_MC <- function(x){(-int_a + x)/slope_a}
+abate_a<- A_MC(39.43)
+
+B_MC<- function(x){(-int_line_b + x)/slope_line_b}
+abate_b<- B_MC(39.43)
+
+C_MC <- function(x){(-int_line_c + x)/slope_line_c}
+abate_c<- C_MC(39.43)
+
+# now need to integrate under each of these
+cost_A_cap <- integrate(A_2, 0, A_MC(39.43))
+
+cost_B_cap <- integrate(B_2, 0, B_MC(39.43))
+
+cost_C_cap <- integrate(C_2, 0, C_MC(39.43))
+
+#total cost
+
+total_cost_cap <- cost_A_cap$value + cost_B_cap$value + cost_C_cap$value
+```
+
+- The total cost of meeting the target in country X: `r round(total_cost_cap, 2)`
+- Cost to sector A: `r round(cost_A_cap$value, 2)` dollars
+- Cost to sector B: `r round(cost_B_cap$value, 2)` dollars
+- Cost to sector C: `r round(cost_C_cap$value, 2)` dollars
+- tax revenue generated: 
+
+
+```{r, include = FALSE}
+
+# for reference to check if this makes sense
+MC_ag <- ggplot(data, aes(x=Abatement, y=MC_A)) +
+  stat_function(fun = A_2, col = "red") +
+  stat_function(fun = B_2, col = "blue") +
+  stat_function(fun = C_2, col = "green") +
+  stat_function(fun = agg_abate_reverse, geom ="line", aes(color = "Aggregated"))+
+  scale_x_continuous(expand = c(0,0), limits = c(0,350)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,100)) +
+  labs(
+    y = "Price ($)",
+    x = "Abatement"
+  ) +
+  theme_classic()
+  
+MC_ag
+
+
+```
+
+**4. Again, without any co-benefits, suppose that country Y (which only has one carbon-emitting sector, D) has no obligation to reduce its emissions. Country X asks country Y to enter the country X carbon market. Doing so would require country Y to put a cap on carbon emissions at its current level of emissions (300 tons), but would then allow country Y to sell carbon offsets to sectors A, B, or C. Are there any incentives for country Y to enter country X’s carbon market and to thus place a voluntary cap on its emissions? Are there any incentives for country X to try to attract country Y into its market?**
+
+redo for 4 sectors and find the new amount of abatement for each sector under cap and trade
+```{r}
+# How much does it cost country Y (sector D) to abate to 300
+
+MC_D<- function(x){int_line_d + slope_line_d*(x)}
+MC_D(300) #87.66577 
+
+d_per_unit_carbon <- MC_D(300)/300
+d_per_unit_carbon
+# So country X would have to pay more than $  0.2922192  per unit ccarbon for country Y to be interested
+
+# per units abatement costs for A, B, C
+C_A<- function(x){int_a + slope_a*(x)}
+A_per_unit_carbon <- C_A(300)/300
+A_per_unit_carbon # 0.548027 
+
+C_B<- function(x){int_line_b + slope_line_b*(x)}
+B_per_unit_carbon <- C_B(300)/300
+B_per_unit_carbon #   0.2298033 
+
+C_C<- function(x){int_line_c + slope_line_c*(x)}
+C_per_unit_carbon <- C_C(300)/300
+C_per_unit_carbon  #0.7449765 
+
+
+
+```
+
+Going with what Sam said in office hours and redo what was done in 3c but now with sector D (counrty y)
+```{r}
+# aggregate demand with all four sectors now
+
+deno_2<-  slope_a * slope_line_b + slope_a * slope_line_c + slope_line_b * slope_line_c + slope_line_d*slope_a + slope_line_d* slope_line_b + slope_line_d*slope_line_c
+
+agg_y_int_2 = (int_a*slope_line_b*slope_line_c*slope_line_d/deno_2) + (int_line_b*slope_a*slope_line_c*slope_line_d/deno_2) + (int_line_c*slope_line_b*slope_a*slope_line_d/deno_2) + (int_line_d*slope_a*slope_line_b*slope_line_c/deno_2)
+
+agg_coeff_2 = (slope_a*slope_line_b*slope_line_c*slope_line_d/deno_2)
+
+agg_abate_reverse_2 <- function(x){agg_coeff_2*x + agg_y_int_2}
+
+price_2<- agg_abate_reverse_2(300)
+price_2
+
+abate_a_2<- A_MC(price_2)
+abate_a_2
+
+abate_b_2<- B_MC(price_2)
+abate_b_2
+
+abate_c_2<- C_MC(price_2)
+abate_c_2
+
+D_MC<- function(x){(-int_line_d + x)/slope_line_d}
+
+abate_d_2<- D_MC(price_2)
+abate_d_2
+
+
+
+
+
+
+
+
+
+
+```
+
+
+5. Now assume that every ton of carbon emissions creates 1 ton of local air pollution. Local air pollution causes economic damages (health, environmental, etc.), but only in the country in which it is emitted. Assume there are no local air pollution regulations in either country X or country Y.
+a. In a carbon cap and trade market that only covers sectors in country X, how much local air pollution would you expect in country X? In country Y?
+
+```{r}
+# just add 1 to each MC function
+
+```
+
+
+b. If country Y enters the carbon market for country X (as in question 4 above), how much local pollution will there be in country X and country Y?
+
+c. What advice can you give country X and country Y about the desirability of allowing international trade of carbon emissions credits?
+
+net benefit to firm A
+tax: total abatement cost
+what they pay in tax
+tax*quanitity
+
+
+
+
+
+
