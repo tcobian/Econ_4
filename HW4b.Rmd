@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Read in the data and packages
+
 ```{r, include=FALSE}
 library(tidyverse)
 data<- read_csv("HW4Data (3).csv")
@@ -207,10 +207,10 @@ total_cost <- cost_A$value + cost_B$value + cost_C$value
 # also need help with this inline referencing the numbers are coming out weird 
 ```
 
-- The total cost of meeting the target in country X: `r round(total_cost, 2)`
-- Cost to sector A: `r round(cost_A$value, 2)`
-- Cost to sector B: `r round(cost_B$value, 2)`
-- Cost to sector C: `r round(cost_C$value, 2)`
+- The total cost of meeting the target in country X: \$`r round(total_cost, 2)`
+- Cost to sector A: \$`r round(cost_A$value, 2)`
+- Cost to sector B: \$`r round(cost_B$value, 2)`
+- Cost to sector C: \$`r round(cost_C$value, 2)`
 
 **b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the tax that accomplishes the desired reduction.**
 
@@ -258,12 +258,12 @@ tax_rev<- 300*opt_tax
 
 
 ```
-- optimal tax: `r round(opt_tax, 2)`
-- The total cost of meeting the target in country X: `r round(total_cost_tax, 2)`
-- Cost to sector A: `r round(cost_A_tax$value, 2)`
-- Cost to sector B: `r round(cost_B_tax$value, 2)`
-- Cost to sector C: `r round(cost_C_tax$value, 2)`
-- tax revenue generated: 11827.97
+- optimal tax: \$`r round(opt_tax, 2)`
+- The total cost of meeting the target in country X: \$`r round(total_cost_tax, 2)`
+- Cost to sector A: \$`r round(cost_A_tax$value, 2)`
+- Cost to sector B: \$`r round(cost_B_tax$value, 2)`
+- Cost to sector C: \$`r round(cost_C_tax$value, 2)`
+- tax revenue generated: $11827.97
 
 **c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to their current emissions minus 100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three sectors are allowed to trade with each other. You will need to derive the outcome of that trading.**
 ```{r, echo = FALSE}
@@ -312,11 +312,11 @@ cost_C_cap <- integrate(C_2, 0, C_MC(price))
 total_cost_cap <- cost_A_cap$value + cost_B_cap$value + cost_C_cap$value
 ```
 
-- The total cost of meeting the target in country X: `r round(total_cost_cap, 2)`
-- Cost to sector A: `r round(cost_A_cap$value, 2)` dollars
-- Cost to sector B: `r round(cost_B_cap$value, 2)` dollars
-- Cost to sector C: `r round(cost_C_cap$value, 2)` dollars
-- tax revenue generated: 
+- The total cost of meeting the target in country X: \$`r round(total_cost_cap, 2)`
+- Cost to sector A: \$`r round(cost_A_cap$value, 2)` 
+- Cost to sector B: \$`r round(cost_B_cap$value, 2)` 
+- Cost to sector C: \$`r round(cost_C_cap$value, 2)` 
+ 
 
 
 ```{r, include = FALSE}
@@ -425,11 +425,12 @@ total_cost_4 <- cost_A_cap$value + cost_B_cap$value + cost_C_cap$value
 
 ```
 
-- The total cost of meeting the target in country X: `r round(total_cost_4, 2)`
-- Cost to sector A: `r round(cost_A_4$value, 2)` dollars
-- Cost to sector B: `r round(cost_B_4$value, 2)` dollars
-- Cost to sector C: `r round(cost_C_4$value, 2)` dollars
-- tax revenue generated: 
+- The total cost of meeting the target in country X: \$`r round(total_cost_4, 2)`
+- Cost to sector A: \$`r round(cost_A_4$value, 2)` 
+- Cost to sector B: \$`r round(cost_B_4$value, 2)` 
+- Cost to sector C: \$`r round(cost_C_4$value, 2)` 
+- Country Y (\$`r round(cost_D_4$value, 2)`) would have an incentive to enter into the market becuse it is cheaper for them to abate than country X (\$`r round(total_cost_4, 2)`)
+
 
 **5. Now assume that every ton of carbon emissions creates 1 ton of local air pollution. Local air pollution causes economic damages (health, environmental, etc.), but only in the country in which it is emitted. Assume there are no local air pollution regulations in either country X or country Y.**
 
@@ -454,8 +455,8 @@ country_y_pollute<- 300
 
 ```
 
-- local air pollution in country x: `r round(country_x_pollute, 2)`
-- Local air pollution in country y: `r round(country_y_pollute, 2)`
+- local air pollution in country x: `r round(country_x_pollute, 2)` ton
+- Local air pollution in country y: `r round(country_y_pollute, 2)` ton
 
 b. If country Y enters the carbon market for country X (as in question 4 above), how much local pollution will there be in country X and country Y?
 
@@ -472,24 +473,12 @@ x_pollute_2<- pollute_a_2 + pollute_b_2 + pollute_c_2
 y_pollute_2<- pollute_d_2
 
 ```
-- local air pollution for counrty x: `r round(x_pollute_2, 2)`
-- local air pollustion for country y: `r round(y_pollute_2, 2)`
+- local air pollution for counrty x: `r round(x_pollute_2, 2)` ton
+- local air pollution for country y: `r round(y_pollute_2, 2)` ton
 
 c. What advice can you give country X and country Y about the desirability of allowing international trade of carbon emissions credits?
 
-- If international trade is allowed then you will be able to gain more benefit from the reduction of carbon emissions but this will have a negative effect on local air pollution. This is because there are local air pollutants that will affect the local community. International trade of carbon will not adress this issue as the pollutants remain local.
-
-```{r, include=FALSE}
-
-
-
-
-
-
-
-```
-
-
+- If international trade is allowed then you will be able to gain more benefit from the reduction of carbon emissions but this will have a disproportionate effect on local air pollution. Country X will experience more local air pollution than country Y. 
 
 
 
