@@ -314,16 +314,21 @@ MC_ag
 
 ```{r, include=FALSE}
 # redo for 4 sectors and find the new amount of abatement for each sector under cap and trade
-deno2 = slope_a * slope_line_b + slope_a * slope_line_c + slope_line_b * slope_line_c + slope_a * slope_line_d + slope_line_d*slope_line_b + slope_line_d*slope_line_c
 
-agg_y_int2 = (int_a*slope_line_b*slope_line_c*slope_line_d/deno) + (int_line_b*slope_a*slope_line_c*slope_line_d/deno) + (int_line_c*slope_line_b*slope_a*slope_line_d/deno)
+# was able to find the price with all four sectors by using this functiona and plugging in prices until 300 abatement was found. Price = 29.81
 
-agg_coeff2 = (slope_a*slope_line_b*slope_line_c*slope_line_d/deno)
-
-agg_abate_reverse2 <- function(x){
-  agg_coeff2*x + agg_y_int2
+agg_price_elegant<- function(x){
+  a = A_MC(x)
+  b = B_MC(x)
+  c = C_MC(x)
+  d = D_MC(x)
+  return(a + b + c + d)
 }
-price2 <- agg_abate_reverse2(300) #10.24805 
+
+agg_abate_elegant(29.81)
+
+price2<- agg_abate_elegant(29.81)
+
 
 ```
 
