@@ -66,9 +66,15 @@ slope_line_d<- lm_d$coefficients[2]
 ################################################
 ```
 
-*need to figure out this inline referencing*
+
 Regression fit
-Sector A: Data looked relatively linear and a linear model described `r lm_a$r.squared` of the variance of the data 
+Sector A: Data looked relatively linear and a linear model described 0.904 of the variance of the data. 
+
+Sector B: Data looked relatively linear and a linear model described 0.5355 of the variance of the data therefore the model did not fit the data as well as sector A.
+
+Sector C: Data looked relatively linear and a linear model described 0.8663 of the variance of the data therefore the model did not fit the data as well as sector A.
+
+Sectocr D: Data looked relatively linear and a linear model described 0.5108 of the variance of the data therefore the model did not fit the data as well as sector A.
 
 Graphs of all the sectors
 
@@ -208,33 +214,56 @@ total_cost <- cost_A$value + cost_B$value + cost_C$value
 
 **b. Tax on carbon. To emit a ton of carbon in country X, you must pay a tax of $t. You will need to find the tax that accomplishes the desired reduction.**
 
-```{r, echo = FALSE}
+```{r, include = FALSE}
 # tax should be where the aggregate marginal cost curve crosses the aggregate demand curve 
 # costs should
+#uniroot????
+
+A_MC <- function(x){(-int_a + x)/slope_a}
+
+B_MC<- function(x){(-int_line_b + x)/slope_line_b}
+
+C_MC <- function(x){(-int_line_c + x)/slope_line_c}
+
+D_MC<- function(x){(-int_line_d + x)/slope_line_d}
+
+agg_price_elegant<- function(x){
+  a = A_MC(x)
+  b = B_MC(x)
+  c = C_MC(x)
+  
+  return(a + b + c)
+}
+
+agg_price_elegant(39.42658)
+
+opt_tax<- 39.42658
+
+
+
 
 
 # to find the costs:
 # need to integrate under each of these
 # need to add what the end of the integration is to, ie how much each sector has to emit with the tax
+cost_A_tax <- integrate(A_2, 0, A_MC(opt_tax))
 
-#cost_A_t <- integrate(A_2, 0, )
+cost_B_tax <- integrate(B_2, 0, B_MC(opt_tax))
 
-#cost_B_t <- integrate(B_2, 0, )
+cost_C_tax <- integrate(C_2, 0, C_MC(opt_tax))
 
-#cost_C_cap <- integrate(C_2, 0, )
+total_cost_tax <- cost_A_tax$value + cost_B_tax$value + cost_C_tax$value
 
-#total cost
-
-#total_cost_t <- cost_A_t$value + cost_B_t$value + cost_C_tvalue
+tax_rev<- 300*opt_tax
 
 
 ```
-
-- The total cost of meeting the target in country X: 
-- Cost to sector A: 
-- Cost to sector B: 
-- Cost to sector C: 
-- tax revenue generated:
+- optimal tax: `r round(opt_tax, 2)`
+- The total cost of meeting the target in country X: `r round(total_cost_tax, 2)`
+- Cost to sector A: `r round(cost_A_tax$value, 2)`
+- Cost to sector B: `r round(cost_B_tax$value, 2)`
+- Cost to sector C: `r round(cost_C_tax$value, 2)`
+- tax revenue generated: 11827.97
 
 **c. Cap and trade. Each sector (A, B, C) is allocated carbon permits equal to their current emissions minus 100 (same as in (a) above), thus achieving the total reduction of 300. Then, these three sectors are allowed to trade with each other. You will need to derive the outcome of that trading.**
 ```{r, echo = FALSE}
@@ -339,8 +368,8 @@ agg_price_elegant<- function(x){
   return(a + b + c + d)
 }
 
-agg_price_elegant(29.81)
-new_price<- 29.81
+agg_price_elegant(42.421)
+new_price<- 42.421
 # this comes out to the correct total abatement but not the correct indiviual abatement when applying it to the indiviual functions below
 
 ###################################
@@ -354,7 +383,7 @@ C_2<- function(x){int_line_c + slope_line_c*x}
 D_2<- function(x){int_line_d + slope_line_d*x}
 
 # given the abatement, what is the price?
-net_abate = function(x) {
+net_abate<- function(x) {
   a = A_2(x)
   b = B_2(x)
   c = C_2(x)
@@ -447,11 +476,6 @@ y_pollute_2<- pollute_d_2
 - local air pollustion for country y: `r round(y_pollute_2, 2)`
 
 c. What advice can you give country X and country Y about the desirability of allowing international trade of carbon emissions credits?
-
-net benefit to firm A
-tax: total abatement cost
-what they pay in tax
-tax*quanitity
 
 - If international trade is allowed then you will be able to gain more benefit from the reduction of carbon emissions but this will have a negative effect on local air pollution. This is because there are local air pollutants that will affect the local community. International trade of carbon will not adress this issue as the pollutants remain local.
 
