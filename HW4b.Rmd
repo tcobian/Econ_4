@@ -428,6 +428,17 @@ country_y_pollute<- 300
 b. If country Y enters the carbon market for country X (as in question 4 above), how much local pollution will there be in country X and country Y?
 
 ```{r}
+# take into accoubnt now how much each sector is abating from problem 4 and subtract it from the amount they are polluting
+
+pollute_a_2<- 180 - abate_a_4
+pollute_b_2<- 200 - abate_b_4
+pollute_c_2<- 220 - abate_c_4
+pollute_d_2<- 300 - abate_d_4
+
+x_pollute_2<- pollute_a_2 + pollute_b_2 + pollute_c_2 
+
+y_pollute_2<- pollute_d_2
+
 
 
 
