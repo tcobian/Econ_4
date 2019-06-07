@@ -68,13 +68,29 @@ slope_line_d<- lm_d$coefficients[2]
 
 
 Regression fit
-Sector A: Data looked relatively linear and a linear model described 0.904 of the variance of the data. 
+*Sector A:* 
 
-Sector B: Data looked relatively linear and a linear model described 0.5355 of the variance of the data therefore the model did not fit the data as well as sector A.
+Price = `r round(int_a, 2)` + `r round(slope_a, 2)`*(Abatement)
 
-Sector C: Data looked relatively linear and a linear model described 0.8663 of the variance of the data therefore the model did not fit the data as well as sector A.
+Data looked relatively linear and a linear model described 0.904 of the variance of the data. 
 
-Sectocr D: Data looked relatively linear and a linear model described 0.5108 of the variance of the data therefore the model did not fit the data as well as sector A.
+*Sector B:*
+
+Price = `r round(int_line_b, 2)` + `r round(slope_line_b, 2)`*(Abatement)
+
+Data looked relatively linear and a linear model described 0.5355 of the variance of the data therefore the model did not fit the data as well as sector A.
+
+*Sector C:*
+
+Price = `r round(int_line_c, 2)` + `r round(slope_line_c, 2)`*(Abatement)
+
+Data looked relatively linear and a linear model described 0.8663 of the variance of the data therefore the model did not fit the data as well as sector A.
+
+*Sectocr D:* 
+
+Price = `r round(int_line_d, 2)` + `r round(slope_line_d, 2)`*(Abatement)
+
+Data looked relatively linear and a linear model described 0.5108 of the variance of the data therefore the model did not fit the data as well as sector A.
 
 Graphs of all the sectors
 
@@ -192,13 +208,13 @@ D_2 <- function(x){int_line_d + slope_line_d*(x)}
 
 ###################
 # sector A: current carbon emissions are 180, cut down by 1/2 = 90
-cost_A <- integrate(A_2, 0, 90)
+cost_A <- integrate(A_2, 0, 100)
 
 # sector B: current carbon emissions are 200, cut down by 1/2 = 100
 cost_B <- integrate(B_2, 0, 100)
 
 # sector C: current carbon emissions are 220, cut down by 1/2 = 110
-cost_C <- integrate(C_2, 0, 110)
+cost_C <- integrate(C_2, 0, 100)
 
 # total cost
 
@@ -208,13 +224,13 @@ total_cost <- cost_A$value + cost_B$value + cost_C$value
 
 
 # sector A: current carbon emissions are 180, cut down by 1/2 = 90
-benefit_A <- integrate(A, 0, 90)
+benefit_A <- integrate(A, 0, 80)
 
 # sector B: current carbon emissions are 200, cut down by 1/2 = 100
 benefit_B <- integrate(B_line, 0, 100)
 
 # sector C: current carbon emissions are 220, cut down by 1/2 = 110
-benefit_C <- integrate(C_line, 0, 110)
+benefit_C <- integrate(C_line, 0, 120)
 
 
 total_benefit<- benefit_A$value + benefit_B$value + benefit_C$value
@@ -263,22 +279,22 @@ opt_tax<- 39.42658
 # to find the costs:
 # need to integrate under each of these
 # need to add what the end of the integration is to, ie how much each sector has to emit with the tax
-cost_A_tax <- integrate(A_2, 0, A_MC(opt_tax))
+cost_A_tax <- integrate(A_2, 0, A_MC(opt_tax))$value + (180 - A_MC(opt_tax))*opt_tax
 
-cost_B_tax <- integrate(B_2, 0, B_MC(opt_tax))
+cost_B_tax <- integrate(B_2, 0, B_MC(opt_tax))$value + (200 - B_MC(opt_tax))*opt_tax
 
-cost_C_tax <- integrate(C_2, 0, C_MC(opt_tax))
+cost_C_tax <- integrate(C_2, 0, C_MC(opt_tax))$value + (220 - C_MC(opt_tax))*opt_tax
 
-total_cost_tax <- cost_A_tax$value + cost_B_tax$value + cost_C_tax$value
+total_cost_tax <- cost_A_tax + cost_B_tax + cost_C_tax
 
 tax_rev<- 300*opt_tax
 
 
-benefit_A_tax <- integrate(A, 0, A_MC(opt_tax))
+benefit_A_tax <- integrate(A, 0, (180-A_MC(opt_tax)))
 
-benefit_B_tax <- integrate(B_line, 0, B_MC(opt_tax))
+benefit_B_tax <- integrate(B_line, 0, (200 - B_MC(opt_tax)))
 
-benefit_C_tax <- integrate(C_line, 0, C_MC(opt_tax))
+benefit_C_tax <- integrate(C_line, 0, (220 - C_MC(opt_tax)))
 
 total_benefit_tax<- benefit_C_tax$value + benefit_B_tax$value + benefit_A_tax$value
 
@@ -291,9 +307,9 @@ net_benefit_tax<- total_benefit_tax - total_cost_tax + tax_rev
 ```
 - optimal tax: \$`r round(opt_tax, 2)`
 - The total cost of meeting the target in country X: \$`r round(total_cost_tax, 2)`
-- Cost to sector A: \$`r round(cost_A_tax$value, 2)`
-- Cost to sector B: \$`r round(cost_B_tax$value, 2)`
-- Cost to sector C: \$`r round(cost_C_tax$value, 2)`
+- Cost to sector A: \$`r round(cost_A_tax, 2)`
+- Cost to sector B: \$`r round(cost_B_tax, 2)`
+- Cost to sector C: \$`r round(cost_C_tax, 2)`
 - tax revenue generated: $11827.97
 - Net Benefit: \$`r round(net_benefit_tax, 2)`
 
@@ -316,7 +332,6 @@ price<- agg_abate_reverse(300) # 39.42658
 
 
 ```{r, echo = FALSE}
-
 # To test how much abatement each place would need at the price of the aggregate MC curve
 A_MC <- function(x){(-int_a + x)/slope_a}
 abate_a<- A_MC(price)
@@ -333,26 +348,26 @@ D_MC<- function(x){(-int_line_d + x)/slope_line_d}
 total_abate_cap <- abate_a + abate_b + abate_c # it does!!
 
 # now need to integrate under each of these
-cost_A_cap <- integrate(A_2, 0, A_MC(price))
+cost_A_cap <- integrate(A_2, 0, A_MC(price))$value + (100 - A_MC(price))*price
 
-cost_B_cap <- integrate(B_2, 0, B_MC(price))
+cost_B_cap <- integrate(B_2, 0, B_MC(price))$value + (100 - B_MC(price))*price
 
-cost_C_cap <- integrate(C_2, 0, C_MC(price))
+cost_C_cap <- integrate(C_2, 0, C_MC(price))$value + (100 - C_MC(price))*price
 
 #total cost
 
-total_cost_cap <- cost_A_cap$value + cost_B_cap$value + cost_C_cap$value
+total_cost_cap <- cost_A_cap + cost_B_cap + cost_C_cap
 
 
-benefit_A_cap <- integrate(A, 0, A_MC(price))
+benefit_A_cap <- integrate(A, 0, (180 - A_MC(price)))
 
-benefit_B_cap <- integrate(B_line, 0, B_MC(price))
+benefit_B_cap <- integrate(B_line, 0, (200 - B_MC(price)))
 
-benefit_C_cap <- integrate(C_line, 0, C_MC(price))
+benefit_C_cap <- integrate(C_line, 0, (220 - C_MC(price)))
 
 total_benefit_cap<- benefit_A_cap$value + benefit_B_cap$value + benefit_C_cap$value
 
-net_benefot_cap<- total_benefit_cap - total_cost_cap
+net_benefit_cap<- total_benefit_cap - total_cost_cap
 
 
 
@@ -361,10 +376,10 @@ net_benefot_cap<- total_benefit_cap - total_cost_cap
 ```
 
 - The total cost of meeting the target in country X: \$`r round(total_cost_cap, 2)`
-- Cost to sector A: \$`r round(cost_A_cap$value, 2)` 
-- Cost to sector B: \$`r round(cost_B_cap$value, 2)` 
-- Cost to sector C: \$`r round(cost_C_cap$value, 2)`
-- Net Benefit: \$`r round(net_benefot_cap, 2)`
+- Cost to sector A: \$`r round(cost_A_cap, 2)` 
+- Cost to sector B: \$`r round(cost_B_cap, 2)` 
+- Cost to sector C: \$`r round(cost_C_cap, 2)`
+- Net Benefit: \$`r round(net_benefit_cap, 2)`
  
 
 
@@ -417,8 +432,8 @@ agg_price_elegant<- function(x){
   return(a + b + c + d)
 }
 
-agg_price_elegant(42.421)
-new_price<- 42.421
+agg_price_elegant(29.81)
+new_price<- 29.81
 # this comes out to the correct total abatement but not the correct indiviual abatement when applying it to the indiviual functions below
 
 ###################################
@@ -460,46 +475,47 @@ abate_d_4 <- D_MC(new_price)
 total <- abate_a_4 + abate_b_4 + abate_c_4 + abate_d_4 # IT WORKS!!!!
 
 
-cost_A_4 <- integrate(A_2, 0, A_MC(new_price))
 
-cost_B_4 <- integrate(B_2, 0, B_MC(new_price))
+cost_A_4 <- integrate(A_2, 0, A_MC(new_price))$value + (100 - A_MC(new_price))*new_price
 
-cost_C_4 <- integrate(C_2, 0, C_MC(new_price))
+cost_B_4 <- integrate(B_2, 0, B_MC(new_price))$value + (100 - B_MC(new_price))*new_price
 
-cost_D_4 <- integrate(D_2, 0, D_MC(new_price))
+cost_C_4 <- integrate(C_2, 0, C_MC(new_price))$value + (100 - C_MC(new_price))*new_price
+ 
+cost_D_4 <- integrate(D_2, 0, D_MC(new_price))$value + (300 - D_MC(new_price))*new_price
 
 #total cost
 
-total_cost_4 <- cost_A_cap$value + cost_B_cap$value + cost_C_cap$value
+total_cost_4 <- cost_A_4 + cost_B_4 + cost_C_4
 
 
 
-benefit_A_4 <- integrate(A, 0, A_MC(new_price))
+benefit_A_4 <- integrate(A, 0, (180 - A_MC(new_price)))
 
-benefit_B_4 <- integrate(B_line, 0, B_MC(new_price))
+benefit_B_4 <- integrate(B_line, 0, (200 - B_MC(new_price)))
 
-benefit_C_4 <- integrate(C_line, 0, C_MC(new_price))
+benefit_C_4 <- integrate(C_line, 0, (220 - C_MC(new_price)))
 
-benefit_D_4 <- integrate(D_line, 0, D_MC(new_price))
+benefit_D_4 <- integrate(D_line, 0, (300 - D_MC(new_price)))
 
 total_benefit_x<- benefit_A_4$value + benefit_B_4$value + benefit_C_4$value
 
 
 net_benefit_x<- total_benefit_x - total_cost_4
 
-net_benefit_y<- benefit_D_4$value - cost_D_4$value
+net_benefit_y<- benefit_D_4$value - cost_D_4
 
 
 
 ```
 
 - The total cost of meeting the target in country X: \$`r round(total_cost_4, 2)`
-- Cost to sector A: \$`r round(cost_A_4$value, 2)` 
-- Cost to sector B: \$`r round(cost_B_4$value, 2)` 
-- Cost to sector C: \$`r round(cost_C_4$value, 2)` 
+- Cost to sector A: \$`r round(cost_A_4, 2)` 
+- Cost to sector B: \$`r round(cost_B_4, 2)` 
+- Cost to sector C: \$`r round(cost_C_4, 2)` 
 - Net benefit country X: \$`r round(net_benefit_x, 2)`
 - Net benefit country y: \$`r round(net_benefit_y, 2)`
-- Country Y (\$`r round(cost_D_4$value, 2)`) would have an incentive to enter into the market becuse it is cheaper for them to abate than country X (\$`r round(total_cost_4, 2)`)
+- Country Y (\$`r round(cost_D_4, 2)`) would have an incentive to enter into the market becuse it is cheaper for them to abate than country X (\$`r round(total_cost_4, 2)`)
 
 
 **5. Now assume that every ton of carbon emissions creates 1 ton of local air pollution. Local air pollution causes economic damages (health, environmental, etc.), but only in the country in which it is emitted. Assume there are no local air pollution regulations in either country X or country Y.**
